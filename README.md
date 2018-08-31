@@ -6,10 +6,10 @@
 
 Train on VOC2007 and VOC2012 trainval and test on VOC2007
 
-Network|mAP|Deploy|NetScope
-:---:|:---:|:---:|:---:
-Pelee|0.64|[13.1mb](Pelee/)|[graph](http://ethereon.github.io/netscope/#/gist/25d91645f12feed9091563a5916c9e01)
-
+network|mAP|resolution|macc|param|
+:---:|:---:|:---:|:---:|:---:|
+PVA-YOLOv3|0.7x|416|2.55G|4.72M|
+Pelee-YOLOv3|0.7x|416|4.25G|3.85M|
 ## Linux Platform
 
 [Run on linux](https://github.com/eric612/MobileNet-YOLO)
