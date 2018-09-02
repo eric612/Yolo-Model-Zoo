@@ -17,14 +17,15 @@ debug_info: false
 snapshot_after_train: true
 test_initialization: false
 average_loss: 10
+stagelr: 0.000001
 stagelr: 0.00001
 stagelr: 0.0001
 stagelr: 0.001
 stagelr: 0.0001
 stagelr: 0.00001
+stageiter: 50
 stageiter: 100
 stageiter: 200
-#stageiter: 20000
 stageiter: 40000
 stageiter: 60000
 stageiter: 80000
