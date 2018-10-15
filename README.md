@@ -1,6 +1,6 @@
 # Yolo-Model-Zoo
 
-**This is an experimental project , try to train different imagenet models with yolov2
+**This is an experimental project , try to use different backbone models with yolov3 detector
 
 ## VOC
 
