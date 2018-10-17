@@ -6220,10 +6220,10 @@ layer {
   bottom: "conv5_4"
   top: "conv6"
   convolution_param {
-    num_output: 256
+    num_output: 1024
     bias_term: false
-    pad: 1
-    kernel_size: 3
+    pad: 0
+    kernel_size: 1
     stride: 1
     weight_filler {
       type: "xavier"
@@ -6290,10 +6290,10 @@ layer {
   bottom: "conv4_4"
   top: "conv7"
   convolution_param {
-    num_output: 384
+    num_output: 1024
     bias_term: false
-    pad: 1
-    kernel_size: 3
+    pad: 0
+    kernel_size: 1
     stride: 1
     weight_filler {
       type: "xavier"
@@ -6411,60 +6411,18 @@ layer {
 
 
 layer {
-  name: "Yolov3Loss1"
-  type: "Yolov3"
+  name: "detection_out"
+  type: "Yolov3DetectionOutput"
   bottom: "conv9"
-  bottom: "label"
-  top: "det_loss1"
-  loss_weight: 1
-  yolov3_param {
-    side: 13
-    num_class: 20
-    num: 3  
-    object_scale: 5.0
-    noobject_scale: 1.0
-    class_scale: 1.0
-    coord_scale: 1.0
-    thresh: 0.6
-	anchors_scale : 32
-	use_logic_gradient : false
-	#10,14,  23,27,  37,58,  81,82,  135,169,  344,319
-    biases: 10
-    biases: 14
-    biases: 23
-    biases: 27
-    biases: 37
-    biases: 58
-    biases: 81
-    biases: 82
-    biases: 135
-    biases: 169
-	biases: 344
-    biases: 319
-	
-	mask:3
-	mask:4
-	mask:5
-  }
-}
-layer {
-  name: "Yolov3Loss2"
-  type: "Yolov3"
   bottom: "conv10"
-  bottom: "label"
-  top: "det_loss2"
-  loss_weight: 1
-  yolov3_param {
-    side: 26
-    num_class: 20
-    num: 3  
-    object_scale: 5.0
-    noobject_scale: 1.0
-    class_scale: 1.0
-    coord_scale: 1.0
-    thresh: 0.6
-	anchors_scale : 16
-	use_logic_gradient : false
+  top: "detection_out"
+
+  yolov3_detection_output_param {
+    confidence_threshold: 0.01
+	nms_threshold: 0.55
+    num_classes: 20
+	
+	
 	#10,14,  23,27,  37,58,  81,82,  135,169,  344,319
     biases: 10
     biases: 14
@@ -6479,9 +6437,14 @@ layer {
 	biases: 344
     biases: 319
 	
-	mask:0
-	mask:1
-	mask:2
+    mask:3
+    mask:4
+    mask:5	
+    mask:0
+    mask:1
+    mask:2
+    anchors_scale:32
+    anchors_scale:16
+    mask_group_num:2
   }
 }
-
