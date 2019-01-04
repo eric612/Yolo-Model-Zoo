@@ -1071,10 +1071,10 @@ layer {
 }
 
 layer {
-  name: "conv_indoor"
+  name: "conv_indoor1"
   type: "Convolution"
   bottom: "res5b"
-  top: "conv_indoor"
+  top: "conv_indoor1"
     param {
     lr_mult: 1
     decay_mult: 1
@@ -1084,12 +1084,39 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 125
+    num_output: 75
     kernel_size: 1
     pad: 0
     stride: 1
     weight_filler {
-      type: "msra"
+      type: "xavier"
+    }
+	bias_filler {
+      value: 0
+    }
+  }
+}
+
+layer {
+  name: "conv_indoor2"
+  type: "Convolution"
+  bottom: "res4b"
+  top: "conv_indoor2"
+    param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 75
+    kernel_size: 1
+    pad: 0
+    stride: 1
+    weight_filler {
+      type: "xavier"
     }
 	bias_filler {
       value: 0
@@ -1098,28 +1125,42 @@ layer {
 }
 layer {
   name: "detection_out"
-  type: "YoloDetectionOutput"
-  bottom: "conv_indoor"
+  type: "Yolov3DetectionOutput"
+  bottom: "conv_indoor1"
+  bottom: "conv_indoor2"
   top: "detection_out"
   include {
 	phase: TEST
   }
-  yolo_detection_output_param {
-    num_classes: 20
-    coords: 4
-    confidence_threshold: 0.20
+  yolov3_detection_output_param {
+    confidence_threshold: 0.01
 	nms_threshold: 0.45
-
-    biases: 1.08
-    biases: 1.19
-    biases: 3.42
-    biases: 4.41
-    biases: 6.63
-    biases: 11.38
-    biases: 9.42
-    biases: 5.11
-    biases: 16.62
-    biases: 10.52
+    num_classes: 20
+	
+	
+	#10,14,  23,27,  37,58,  81,82,  135,169,  344,319
+    biases: 10
+    biases: 14
+    biases: 23
+    biases: 27
+    biases: 37
+    biases: 58
+    biases: 81
+    biases: 82
+    biases: 135
+    biases: 169
+	biases: 344
+    biases: 319
+	
+    mask:3
+    mask:4
+    mask:5	
+    mask:0
+    mask:1
+    mask:2
+    anchors_scale:32
+    anchors_scale:16
+    mask_group_num:2
   }
 }
 layer {

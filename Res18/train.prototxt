@@ -124,7 +124,7 @@ layer {
     }
 	expand_param {
       prob: 0.5
-      max_expand_ratio: 2.0
+      max_expand_ratio: 4.0
     }
   }
   data_param {
@@ -134,7 +134,88 @@ layer {
   }
   annotated_data_param {
 	yolo_data_type : 1
-	yolo_data_jitter : 0.3
+    batch_sampler {
+      max_sample: 1
+      max_trials: 1
+    }
+    batch_sampler {
+      sampler {
+        min_scale: 0.3
+        max_scale: 1.0
+        min_aspect_ratio: 0.5
+        max_aspect_ratio: 2.0
+      }
+      sample_constraint {
+        min_jaccard_overlap: 0.1
+      }
+      max_sample: 1
+      max_trials: 50
+    }
+    batch_sampler {
+      sampler {
+        min_scale: 0.3
+        max_scale: 1.0
+        min_aspect_ratio: 0.5
+        max_aspect_ratio: 2.0
+      }
+      sample_constraint {
+        min_jaccard_overlap: 0.3
+      }
+      max_sample: 1
+      max_trials: 50
+    }
+    batch_sampler {
+      sampler {
+        min_scale: 0.3
+        max_scale: 1.0
+        min_aspect_ratio: 0.5
+        max_aspect_ratio: 2.0
+      }
+      sample_constraint {
+        min_jaccard_overlap: 0.5
+      }
+      max_sample: 1
+      max_trials: 50
+    }
+    batch_sampler {
+      sampler {
+        min_scale: 0.3
+        max_scale: 1.0
+        min_aspect_ratio: 0.5
+        max_aspect_ratio: 2.0
+      }
+      sample_constraint {
+        min_jaccard_overlap: 0.7
+      }
+      max_sample: 1
+      max_trials: 50
+    }
+    batch_sampler {
+      sampler {
+        min_scale: 0.3
+        max_scale: 1.0
+        min_aspect_ratio: 0.5
+        max_aspect_ratio: 2.0
+      }
+      sample_constraint {
+        min_jaccard_overlap: 0.9
+      }
+      max_sample: 1
+      max_trials: 50
+    }
+    batch_sampler {
+      sampler {
+        min_scale: 0.3
+        max_scale: 1.0
+        min_aspect_ratio: 0.5
+        max_aspect_ratio: 2.0
+      }
+      sample_constraint {
+        max_jaccard_overlap: 1.0
+      }
+      max_sample: 1
+      max_trials: 50
+    }
     label_map_file:  "data/VOC0712/labelmap_voc.prototxt"
   }
 }
@@ -1178,10 +1259,10 @@ layer {
 }
 
 layer {
-  name: "conv_indoor"
+  name: "conv_indoor1"
   type: "Convolution"
   bottom: "res5b"
-  top: "conv_indoor"
+  top: "conv_indoor1"
     param {
     lr_mult: 1
     decay_mult: 1
@@ -1191,52 +1272,118 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 125
+    num_output: 75
     kernel_size: 1
     pad: 0
     stride: 1
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
 	bias_filler {
       value: 0
     }
   }
 }
+
 layer {
-  name: "Region_Loss"
+  name: "conv_indoor2"
+  type: "Convolution"
+  bottom: "res4b"
+  top: "conv_indoor2"
+    param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 75
+    kernel_size: 1
+    pad: 0
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+	bias_filler {
+      value: 0
+    }
+  }
+}
+
+
+layer {
+  name: "Yolov3Loss1"
   type: "Yolov3"
-  bottom: "conv_indoor"
+  bottom: "conv_indoor1"
   bottom: "label"
   top: "det_loss1"
   loss_weight: 1
-  region_loss_param {
+  yolov3_param {
     side: 13
     num_class: 20
-    coords: 4
-    num: 5
-    softmax: 1
-    jitter: 0.2
-    rescore: 1
-    
+    num: 3  
     object_scale: 5.0
     noobject_scale: 1.0
     class_scale: 1.0
     coord_scale: 1.0
-    
-    absolute: 1
     thresh: 0.6
-    random: 0
-
-    biases: 1.08
-    biases: 1.19
-    biases: 3.42
-    biases: 4.41
-    biases: 6.63
-    biases: 11.38
-    biases: 9.42
-    biases: 5.11
-    biases: 16.62
-    biases: 10.52
+	anchors_scale : 32
+	use_logic_gradient : false
+	#10,14,  23,27,  37,58,  81,82,  135,169,  344,319
+    biases: 10
+    biases: 14
+    biases: 23
+    biases: 27
+    biases: 37
+    biases: 58
+    biases: 81
+    biases: 82
+    biases: 135
+    biases: 169
+	biases: 344
+    biases: 319
+	
+	mask:3
+	mask:4
+	mask:5
+  }
+}
+layer {
+  name: "Yolov3Loss2"
+  type: "Yolov3"
+  bottom: "conv_indoor2"
+  bottom: "label"
+  top: "det_loss2"
+  loss_weight: 1
+  yolov3_param {
+    side: 26
+    num_class: 20
+    num: 3  
+    object_scale: 5.0
+    noobject_scale: 1.0
+    class_scale: 1.0
+    coord_scale: 1.0
+    thresh: 0.6
+	anchors_scale : 16
+	use_logic_gradient : false
+	#10,14,  23,27,  37,58,  81,82,  135,169,  344,319
+    biases: 10
+    biases: 14
+    biases: 23
+    biases: 27
+    biases: 37
+    biases: 58
+    biases: 81
+    biases: 82
+    biases: 135
+    biases: 169
+	biases: 344
+    biases: 319
+	
+	mask:0
+	mask:1
+	mask:2
   }
 }
