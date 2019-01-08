@@ -26,8 +26,8 @@ stageiter: 50
 stageiter: 100
 stageiter: 200
 stageiter: 40000
+stageiter: 45000
 stageiter: 50000
-stageiter: 60000
 iter_size: 7
 type: "SGD"
 eval_type: "detection"

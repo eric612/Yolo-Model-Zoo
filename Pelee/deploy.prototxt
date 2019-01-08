@@ -1,11 +1,11 @@
 name: "PeleeNet-YOLO"
-input: "data"
-input_shape {
-  dim: 1
-  dim: 3
-  dim: 416
-  dim: 416
+layer {
+  name: "data"
+  type: "Input"
+  top: "data"
+  input_param { shape: { dim: 1 dim: 3 dim: 416 dim: 416 } }
 }
+
 ######################
 layer {
   name: "stem1"
@@ -7938,9 +7938,7 @@ layer {
   bottom: "stage4_tb_conv"
   bottom: "stage4_res_conv"
   top: "detection_out"
-  include {
-	phase: TEST
-  }
+ 
   yolov3_detection_output_param {
     confidence_threshold: 0.01
 	nms_threshold: 0.45
@@ -7973,19 +7971,3 @@ layer {
   }
 }
 
-layer {
-  name: "detection_eval"
-  type: "DetectionEvaluate"
-  bottom: "detection_out"
-  bottom: "label"
-  top: "detection_eval"
-  include {
-    phase: TEST
-  }
-  detection_evaluate_param {
-    num_classes: 21
-    background_label_id: 0
-    overlap_threshold: 0.5
-    evaluate_difficult_gt: false
-  }
-}

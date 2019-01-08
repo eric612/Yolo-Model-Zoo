@@ -7943,7 +7943,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 75
+    num_output: 125
     kernel_size: 1
     pad: 0
     stride: 1
@@ -7968,7 +7968,7 @@ layer {
   }
   yolov3_detection_output_param {
     confidence_threshold: 0.01
-	nms_threshold: 0.55
+	nms_threshold: 0.45
     num_classes: 20
 	
 	
