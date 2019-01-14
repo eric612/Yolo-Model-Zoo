@@ -1,0 +1,3 @@
+[submodule "TensorRT-Yolov3-model"]
+	path = TensorRT-Yolov3-model
+	url = https://github.com/eric612/TensorRT-Yolov3-model
